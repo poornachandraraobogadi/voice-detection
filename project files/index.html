@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ServiceNow - Smart Library Request Portal</title>
+  <!-- SEO Metadata -->
+  <meta name="description" content="An interactive simulation and technical documentation platform for the ServiceNow Smart Library Request Workflow. Features role-based access, automated approval flow simulator, UI policies, reference qualifiers, and live reports.">
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-mode">
+  <div class="app-container">
+    
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-container">
+          <svg class="sn-logo" viewBox="0 0 320 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 48L32 32L16 16L0 32L16 48Z" fill="var(--primary)" />
+            <path d="M48 48L64 32L48 16L32 32L48 48Z" fill="var(--primary-light)" />
+            <path d="M16 48V64L32 48H16Z" fill="var(--primary-dark)" />
+          </svg>
+          <span class="logo-text">service<span class="logo-bold">now</span></span>
+        </div>
+        <span class="divider">|</span>
+        <span class="app-title">Smart Library Request Manager</span>
+      </div>
+      
+      <div class="header-right">
+        <!-- Impersonation Module -->
+        <div class="impersonator-widget" id="impersonationWidget">
+          <label for="roleSelector" class="widget-label">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Impersonate User:
+          </label>
+          <select id="roleSelector" class="form-select select-role">
+            <option value="student" selected>Aravind Kumar (Student)</option>
+            <option value="librarian">Sarah Jenkins (Librarian)</option>
+            <option value="admin">System Administrator (Admin)</option>
+          </select>
+        </div>
+        
+        <div class="user-badge" id="userBadge">
+          <div class="avatar" id="userAvatar">AK</div>
+          <div class="user-info">
+            <span class="user-name" id="userName">Aravind Kumar</span>
+            <span class="user-role" id="userRole">student</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-layout">
+      
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <!-- Search Navigation -->
+        <div class="sidebar-search">
+          <input type="text" id="navSearch" placeholder="Filter navigator..." autocomplete="off">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="navigator-menu">
+          
+          <div class="menu-section" data-section="library">
+            <span class="section-title">Library Self-Service</span>
+            <ul>
+              <li class="active" data-page="catalog" id="navCatalog">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-menu">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+                <span>Browse Catalog</span>
+              </li>
+              <li data-page="myRequests" id="navMyRequests">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-menu">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span>My Borrow Requests</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="menu-section" data-section="librarian" id="librarianSection">
+            <span class="section-title">Librarian Workbench</span>
+            <ul>
+              <li data-page="manageBooks" id="navManageBooks">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-menu">
+                  <rect x="3" y="3" width="7" height="9"></rect>
+                  <rect x="14" y="3" width="7" height="5"></rect>
+                  <rect x="14" y="12" width="7" height="9"></rect>
+                  <rect x="3" y="16" width="7" height="5"></rect>
+                </svg>
+                <span>Manage Catalog</span>
+              </li>
+              <li data-page="allRequests" id="navAllRequests">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-menu">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span>All Borrow Requests</span>
+                <span class="badge" id="pendingRequestBadge">0</span>
+              </li>
+              <li data-page="reports" id="navReports">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-menu">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span>Reports & Analytics</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="menu-section" data-section="automation">
+            <span class="section-title">Process Automation</span>
+            <ul>
+              <li data-page="flowDesigner" id="navFlowDesigner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-menu">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span>Flow Designer Simulator</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="menu-section" data-section="docs">
+            <span class="section-title">Project Documentation</span>
+            <ul>
+              <li data-page="blueprint" id="navBlueprint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-menu">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span>Technical Blueprint</span>
+              </li>
+              <li data-page="setup" id="navSetup">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-menu">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+                <span>PDI Setup Manual</span>
+              </li>
+            </ul>
+          </div>
+
+        </nav>
+      </aside>
+
+      <!-- Main Panel View -->
+      <main class="content-pane" id="mainContent">
+
+        <!-- Banner Alerts / Notifications -->
+        <div id="toastNotification" class="toast hidden">
+          <div class="toast-content">
+            <span class="toast-title" id="toastTitle">Success</span>
+            <span class="toast-body" id="toastBody">Action completed successfully.</span>
+          </div>
+          <button class="toast-close" id="toastCloseBtn">&times;</button>
+        </div>
+
+        <!-- ================= PAGE 1: CATALOG ================= -->
+        <section id="page-catalog" class="page-view active">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Book Catalog (`u_book`)</h1>
+              <p class="view-subtitle">Browse, search, and manage books available in the Smart Library.</p>
+            </div>
+            <button class="btn btn-primary librarian-only" id="addBookBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-btn-svg">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add New Book
+            </button>
+          </div>
+
+          <!-- Catalog Controls -->
+          <div class="table-controls">
+            <div class="search-box">
+              <input type="text" id="catalogSearch" placeholder="Search books by title, author, or ISBN...">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="control-search-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <div class="filter-group">
+              <label for="catalogStatusFilter">Status:</label>
+              <select id="catalogStatusFilter" class="form-select">
+                <option value="all">All Books</option>
+                <option value="available">Available</option>
+                <option value="issued">Issued</option>
+                <option value="lost">Lost</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Catalog Table -->
+          <div class="table-wrapper">
+            <table class="data-table" id="catalogTable">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>ISBN</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="catalogTableBody">
+                <!-- Dynamically generated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 2: MY BORROW REQUESTS ================= -->
+        <section id="page-myRequests" class="page-view">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">My Borrow Requests</h1>
+              <p class="view-subtitle">Track and submit your borrow requests for processing.</p>
+            </div>
+            <button class="btn btn-primary student-only" id="createRequestBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-btn-svg">
+                <path d="M12 5v14M5 12h14"></path>
+              </svg>
+              New Borrow Request
+            </button>
+          </div>
+
+          <!-- My Requests Table -->
+          <div class="table-wrapper">
+            <table class="data-table" id="myRequestsTable">
+              <thead>
+                <tr>
+                  <th>Request ID</th>
+                  <th>Book Title</th>
+                  <th>Requested By</th>
+                  <th>Request Date</th>
+                  <th>Return Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="myRequestsTableBody">
+                <!-- Dynamically generated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 3: MANAGE CATALOG (Librarian Specific) ================= -->
+        <section id="page-manageBooks" class="page-view">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Manage Book Inventory</h1>
+              <p class="view-subtitle">Librarian management screen to add, edit, or remove books.</p>
+            </div>
+            <button class="btn btn-primary" id="addBookBtnInventory">Add New Book</button>
+          </div>
+          
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>ISBN</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryTableBody">
+                <!-- Dynamically generated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 4: ALL BORROW REQUESTS (Librarian Specific) ================= -->
+        <section id="page-allRequests" class="page-view">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Borrow Request Manager (`u_borrow_request`)</h1>
+              <p class="view-subtitle">Review, approve, reject, or complete book borrow requests.</p>
+            </div>
+          </div>
+
+          <!-- All Requests Table -->
+          <div class="table-wrapper">
+            <table class="data-table" id="allRequestsTable">
+              <thead>
+                <tr>
+                  <th>Request ID</th>
+                  <th>Book Title</th>
+                  <th>Requested By</th>
+                  <th>Request Date</th>
+                  <th>Return Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="allRequestsTableBody">
+                <!-- Dynamically generated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 5: PROCESS AUTOMATION & FLOW DESIGNER SIMULATION ================= -->
+        <section id="page-flowDesigner" class="page-view">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Flow Designer Simulator</h1>
+              <p class="view-subtitle">See how ServiceNow's Flow Designer automates approvals and record updates in real-time.</p>
+            </div>
+          </div>
+
+          <div class="flow-designer-layout">
+            <!-- Left Side: Canvas -->
+            <div class="flow-canvas card">
+              <div class="card-header">
+                <h3>Flow: Borrow Request Approval Flow</h3>
+                <span class="flow-badge active">Active</span>
+              </div>
+              <div class="canvas-body">
+                
+                <!-- Trigger Node -->
+                <div class="flow-node trigger-node" id="node-trigger">
+                  <div class="node-title">
+                    <span class="badge-node">Trigger</span>
+                    Record Created or Updated
+                  </div>
+                  <div class="node-details">
+                    Table: <strong>Borrow Request [u_borrow_request]</strong><br>
+                    Condition: <code>Status == 'Requested'</code>
+                  </div>
+                </div>
+
+                <div class="flow-connector"></div>
+
+                <!-- Action 1 Node -->
+                <div class="flow-node action-node" id="node-approval">
+                  <div class="node-title">
+                    <span class="badge-node action">Action 1</span>
+                    Ask for Approval
+                  </div>
+                  <div class="node-details">
+                    Approver Role: <code>librarian</code><br>
+                    Condition: <code>Wait for approval</code>
+                  </div>
+                </div>
+
+                <div class="flow-connector"></div>
+
+                <!-- Decision Split -->
+                <div class="flow-node-split">
+                  <!-- Approved Route -->
+                  <div class="split-branch" id="branch-approved">
+                    <div class="branch-label text-success">Approved</div>
+                    <div class="flow-connector branch-conn"></div>
+                    
+                    <div class="flow-node action-node success" id="node-update-book">
+                      <div class="node-title"><span class="badge-node action">Action 2</span> Update Record</div>
+                      <div class="node-details">
+                        Table: <strong>Book [u_book]</strong><br>
+                        Field: <code>Status = 'Issued'</code>
+                      </div>
+                    </div>
+                    
+                    <div class="flow-connector branch-conn"></div>
+
+                    <div class="flow-node action-node success" id="node-update-request">
+                      <div class="node-title"><span class="badge-node action">Action 3</span> Update Record</div>
+                      <div class="node-details">
+                        Table: <strong>Borrow Request</strong><br>
+                        Field: <code>Status = 'Approved'</code>
+                      </div>
+                    </div>
+
+                    <div class="flow-connector branch-conn"></div>
+
+                    <div class="flow-node action-node success" id="node-send-email-approved">
+                      <div class="node-title"><span class="badge-node action">Action 4</span> Send Email</div>
+                      <div class="node-details">
+                        To: <code>Requested By</code><br>
+                        Subject: <code>Request Approved</code>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Rejected Route -->
+                  <div class="split-branch" id="branch-rejected">
+                    <div class="branch-label text-danger">Rejected</div>
+                    <div class="flow-connector branch-conn"></div>
+
+                    <div class="flow-node action-node danger" id="node-update-request-rejected">
+                      <div class="node-title"><span class="badge-node action">Action 2</span> Update Record</div>
+                      <div class="node-details">
+                        Table: <strong>Borrow Request</strong><br>
+                        Field: <code>Status = 'Rejected'</code>
+                      </div>
+                    </div>
+
+                    <div class="flow-connector branch-conn"></div>
+
+                    <div class="flow-node action-node danger" id="node-send-email-rejected">
+                      <div class="node-title"><span class="badge-node action">Action 3</span> Send Email</div>
+                      <div class="node-details">
+                        To: <code>Requested By</code><br>
+                        Subject: <code>Request Rejected</code>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Right Side: Exec Log -->
+            <div class="flow-logs-panel card">
+              <div class="card-header">
+                <h3>Flow Execution Context</h3>
+                <button class="btn btn-secondary btn-sm" id="clearLogsBtn">Clear History</button>
+              </div>
+              <div class="logs-body">
+                <div class="log-info-box">
+                  Select a borrow request and click **Approve** or **Reject** under **All Borrow Requests** to watch the Flow Designer run and execute nodes step-by-step.
+                </div>
+                <div class="execution-progress-bar-container">
+                  <div class="progress-bar" id="flowProgressBar"></div>
+                </div>
+                <div class="console-logs" id="consoleLogs">
+                  <div class="console-placeholder">Waiting for flow trigger event...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 6: REPORTS & ANALYTICS ================= -->
+        <section id="page-reports" class="page-view">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Reports & Analytics</h1>
+              <p class="view-subtitle">Review trends in library circulation and book popularity.</p>
+            </div>
+          </div>
+
+          <div class="reports-grid">
+            <!-- Report Card: Most Borrowed Books -->
+            <div class="card report-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-heading">Report: Most Borrowed Books</h3>
+                  <p class="card-subheading">Top 5 books by request volume (Approved/Returned requests only)</p>
+                </div>
+                <div class="report-metadata">
+                  <span class="meta-label">Source:</span>
+                  <span class="meta-value">u_borrow_request</span>
+                </div>
+              </div>
+              <div class="card-body bar-chart-container">
+                <!-- Bar Chart Canvas/Layout -->
+                <div class="chart-wrapper">
+                  <div class="y-axis-labels">
+                    <span>5</span>
+                    <span>4</span>
+                    <span>3</span>
+                    <span>2</span>
+                    <span>1</span>
+                    <span>0</span>
+                  </div>
+                  <div class="chart-bars-container" id="barChartContainer">
+                    <!-- Bars are injected dynamically -->
+                    <div class="chart-empty-state">
+                      <p>No borrow data available. Add books and approve requests to generate analytical graphs.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Report Card: Status Breakdown -->
+            <div class="card info-stats-card">
+              <div class="card-header">
+                <h3>Library Quick Stats</h3>
+              </div>
+              <div class="card-body quick-stats-layout">
+                <div class="stat-box">
+                  <span class="stat-number" id="statTotalBooks">0</span>
+                  <span class="stat-label">Total Books</span>
+                </div>
+                <div class="stat-box">
+                  <span class="stat-number text-success" id="statAvailableBooks">0</span>
+                  <span class="stat-label">Available</span>
+                </div>
+                <div class="stat-box">
+                  <span class="stat-number text-warning" id="statIssuedBooks">0</span>
+                  <span class="stat-label">Issued</span>
+                </div>
+                <div class="stat-box">
+                  <span class="stat-number text-info" id="statTotalRequests">0</span>
+                  <span class="stat-label">Total Requests</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 7: TECHNICAL BLUEPRINT (DOCS) ================= -->
+        <section id="page-blueprint" class="page-view">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">ServiceNow Technical Blueprint</h1>
+              <p class="view-subtitle">Detailed architectural specifications, schemas, policies, and ACL definitions.</p>
+            </div>
+          </div>
+          <div class="markdown-container card">
+            <div class="markdown-content" id="blueprintMarkdown">
+              <!-- Loaded dynamically via js from technical_blueprint.md -->
+              <p class="loading-state">Loading Technical Blueprint...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 8: PDI SETUP MANUAL (DOCS) ================= -->
+        <section id="page-setup" class="page-view">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">PDI Setup Manual</h1>
+              <p class="view-subtitle">Step-by-step instructions to configure this solution in your ServiceNow Personal Developer Instance.</p>
+            </div>
+          </div>
+          <div class="markdown-container card">
+            <div class="markdown-content" id="setupMarkdown">
+              <!-- Loaded dynamically via js from setup_manual.md -->
+              <p class="loading-state">Loading PDI Setup Manual...</p>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+  
+  <!-- Add Book Modal -->
+  <div class="modal-overlay" id="addBookModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>New Record | Book</h2>
+        <button class="modal-close" id="closeAddBookModal">&times;</button>
+      </div>
+      <form id="addBookForm">
+        <div class="form-grid">
+          <div class="form-group col-6">
+            <label for="bookTitle">Title <span class="required">*</span></label>
+            <input type="text" id="bookTitle" class="form-control" required placeholder="Enter book title">
+          </div>
+          <div class="form-group col-6">
+            <label for="bookAuthor">Author <span class="required">*</span></label>
+            <input type="text" id="bookAuthor" class="form-control" required placeholder="Enter author name">
+          </div>
+          <div class="form-group col-6">
+            <label for="bookISBN">ISBN</label>
+            <input type="text" id="bookISBN" class="form-control" placeholder="e.g. 978-3-16-148410-0">
+          </div>
+          <div class="form-group col-6">
+            <label for="bookStatus">Status</label>
+            <select id="bookStatus" class="form-select">
+              <option value="available" selected>Available</option>
+              <option value="issued">Issued</option>
+              <option value="lost">Lost</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelAddBook">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Create Borrow Request Modal -->
+  <div class="modal-overlay" id="addRequestModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>New Record | Borrow Request</h2>
+        <button class="modal-close" id="closeAddRequestModal">&times;</button>
+      </div>
+      <form id="addRequestForm">
+        <div class="form-grid">
+          <div class="form-group col-6">
+            <label for="reqBook">Book (Reference) <span class="required">*</span></label>
+            <select id="reqBook" class="form-select" required>
+              <!-- Filled dynamically via Reference Qualifier (Available books only) -->
+            </select>
+            <span class="field-hint text-success" id="refQualifierMsg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-sm inline-icon">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              Reference Qualifier active: Showing only **Available** books
+            </span>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="reqUser">Requested By <span class="required">*</span></label>
+            <input type="text" id="reqUser" class="form-control" readonly>
+            <input type="hidden" id="reqUserVal">
+            <span class="field-hint">Auto-populated with current user</span>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="reqDate">Request Date <span class="required">*</span></label>
+            <input type="date" id="reqDate" class="form-control" readonly>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="reqReturnDate">Return Date <span class="required ui-policy-mandatory-marker hidden">*</span></label>
+            <input type="date" id="reqReturnDate" class="form-control" placeholder="Select Return Date">
+            <span class="field-hint text-warning hidden" id="uiPolicyMsg">
+              UI Policy Applied: Status = Issued -> Return Date is Mandatory
+            </span>
+          </div>
+
+          <div class="form-group col-12">
+            <label for="reqStatus">Status</label>
+            <select id="reqStatus" class="form-select" disabled>
+              <option value="requested" selected>Requested</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+              <option value="returned">Returned</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelAddRequest">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Developer Tools Overlay Panel (Floating) -->
+  <div class="dev-panel" id="devPanel">
+    <div class="dev-panel-header" id="devPanelHeader">
+      <span class="dev-title">Simulation Control Center</span>
+      <button class="dev-toggle-btn" id="devToggleBtn">&minus;</button>
+    </div>
+    <div class="dev-panel-body" id="devPanelBody">
+      <p class="dev-hint">Control the backend simulation behaviors dynamically:</p>
+      
+      <div class="dev-control">
+        <label class="switch-container">
+          <input type="checkbox" id="devReferenceQualifier" checked>
+          <span class="switch-slider"></span>
+          Enable Reference Qualifier (Book selection is status-filtered)
+        </label>
+      </div>
+
+      <div class="dev-control">
+        <label class="switch-container">
+          <input type="checkbox" id="devUIPolicy" checked>
+          <span class="switch-slider"></span>
+          Enable UI Policy (Lock fields / Mandatory Return Date on Issued)
+        </label>
+      </div>
+
+      <div class="dev-control">
+        <label class="switch-container">
+          <input type="checkbox" id="devACLs" checked>
+          <span class="switch-slider"></span>
+          Enable ACL Rules (Role-based Read/Write/Delete restrictions)
+        </label>
+      </div>
+
+      <div class="dev-control">
+        <label class="switch-container">
+          <input type="checkbox" id="devFlowDesigner" checked>
+          <span class="switch-slider"></span>
+          Enable Flow Designer Automation (Approval -> Update Book -> Email)
+        </label>
+      </div>
+
+      <div class="dev-separator"></div>
+
+      <div class="dev-buttons">
+        <button class="btn btn-secondary btn-sm btn-full" id="resetMockDbBtn">Reset Database to Default</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script File -->
+  <script src="app.js"></script>
+</body>
+</html>
